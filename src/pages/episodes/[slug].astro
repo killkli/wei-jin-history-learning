@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import EpisodeLayout from '../../layouts/EpisodeLayout.astro';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes');
+  return episodes
+    .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
+    .map(ep => ({
+      // Strip .md extension for URL
+      params: { slug: ep.id.replace(/\.md$/, '') },
+      props: { ep },
+    }));
+}
+
+const { ep } = Astro.props;
+const { Content } = await render(ep);
+---
+
+<EpisodeLayout>
+  <Content />
+</EpisodeLayout>

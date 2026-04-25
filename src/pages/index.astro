@@ -1,0 +1,200 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allEpisodes = await getCollection('episodes');
+const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="魏晉南北朝史 — 甘懷真教授 | 國中歷史學習網" description="臺灣大學甘懷真教授《魏晉南北朝史》15集完整課程，適合國中生生自學的歷史知識網站">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">📜 臺灣大學歷史系 · 甘懷真教授</div>
+    <h1>探索<span class="accent">魏晉南北朝</span>的400年</h1>
+    <p>從黃巾之亂到隋唐統一，一段被誤解的分裂時代。<br>用新視角、新方法，重新理解這段混亂又精彩的歷史。</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> 15集完整課程</span>
+      <span><span class="dot"></span> 400年歷史</span>
+      <span><span class="dot"></span> 國中適用</span>
+    </div>
+    <a href="/episodes" class="cta">開始學習 →</a>
+  </section>
+
+  <!-- Instructor -->
+  <section class="section">
+    <div class="instructor-card">
+      <div class="instructor-avatar">👨\u1f3e</div>
+      <div>
+        <h2>授課教師：甘懷真</h2>
+        <div class="role">臺灣大學歷史系教授 · 中國中古史</div>
+        <p>專精中國中古史、政治制度史。教學風格生動，強調歷史學是「發現事實」而非「道德判斷」。本課程從大移民、族群重構、東亞互動三個新視角切入，引導學生用批判性思考理解這段複雜的歷史時代。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Themes -->
+  <section class="section">
+    <h2 class="section-title">本課程核心觀點</h2>
+    <div class="themes-grid">
+      <div class="theme-card">
+        <div class="theme-icon">🚶</div>
+        <h3>大移民</h3>
+        <p>移民是理解這400年的關鍵詞。沒有單一漢族，漢族是歷史發展的結果，不是原因。</p>
+      </div>
+      <div class="theme-card">
+        <div class="theme-icon">🌏</div>
+        <h3>東亞世界</h3>
+        <p>中國、朝鮮半島、日本列島共同構成東亞世界，彼此互動塑造了各自的文化認同。</p>
+      </div>
+      <div class="theme-card">
+        <div class="theme-icon">👥</div>
+        <h3>基層社會視角</h3>
+        <p>關注普通人的生活與抉擇，而非帝王將相的宮廷故事。</p>
+      </div>
+      <div class="theme-card">
+        <div class="theme-icon">🔍</div>
+        <h3>事實與解釋</h3>
+        <p>歷史學的首務是發現事實，再來是解釋，最後才是評價。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Episodes Preview -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">全部課程</h2>
+      <a href="/episodes" class="see-all">查看全部 →</a>
+    </div>
+    <div class="episodes-grid">
+      {episodes.map(ep => (
+        <a href={`/episodes/${ep.id}`} class="ep-card">
+          <div class="ep-card-header">
+            <span class="ep-num">第{ep.data.order}集</span>
+            <div class="ep-tags">
+              {ep.data.tags.slice(0,2).map(tag => <span class="ep-tag">{tag}</span>)}
+            </div>
+          </div>
+          <h3>{ep.data.title}</h3>
+          <p>{ep.data.subtitle}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 100px 24px 80px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(229,168,75,0.08) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(229,168,75,0.15);
+    border: 1px solid rgba(229,168,75,0.3);
+    color: var(--accent); font-size: 13px;
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 24px;
+  }
+  h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(28px, 6vw, 48px); font-weight: 700;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .accent { color: var(--accent); }
+  .hero p {
+    color: var(--text-muted); font-size: 17px;
+    max-width: 540px; margin: 0 auto 36px; line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex; gap: 28px; justify-content: center; flex-wrap: wrap;
+    color: var(--text-dim); font-size: 14px; margin-bottom: 36px;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .cta {
+    display: inline-block;
+    background: var(--accent); color: #0a0a0e;
+    font-weight: 700; font-size: 15px;
+    padding: 12px 28px; border-radius: 10px;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .cta:hover { background: var(--accent-dim); transform: translateY(-1px); }
+
+  /* Sections */
+  .section { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px; font-weight: 700;
+    margin-bottom: 28px;
+  }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .see-all { color: var(--accent); text-decoration: none; font-size: 14px; }
+  .see-all:hover { text-decoration: underline; }
+
+  /* Instructor */
+  .instructor-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 36px;
+    display: flex; gap: 28px; align-items: center;
+  }
+  .instructor-avatar {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; flex-shrink: 0;
+  }
+  .instructor-card h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px; margin-bottom: 6px;
+  }
+  .instructor-card .role { color: var(--accent); font-size: 13px; margin-bottom: 10px; }
+  .instructor-card p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+  /* Themes */
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .theme-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .theme-icon { font-size: 28px; margin-bottom: 14px; }
+  .theme-card h3 { font-size: 16px; margin-bottom: 8px; color: var(--accent); }
+  .theme-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Episode Grid */
+  .episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .ep-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px;
+    text-decoration: none; color: inherit;
+    transition: all 0.25s; display: block;
+  }
+  .ep-card:hover {
+    border-color: var(--accent-dim); background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+  .ep-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .ep-num { font-size: 12px; font-weight: 700; color: var(--accent); }
+  .ep-tags { display: flex; gap: 6px; }
+  .ep-tag {
+    font-size: 11px; color: var(--text-dim);
+    background: var(--bg); padding: 2px 8px; border-radius: 4px;
+  }
+  .ep-card h3 { font-family: 'Noto Serif TC', serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .ep-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  @media (max-width: 640px) {
+    .instructor-card { flex-direction: column; text-align: center; }
+    .episodes-grid { grid-template-columns: 1fr; }
+  }
+</style>

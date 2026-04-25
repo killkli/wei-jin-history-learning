@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allEpisodes = await getCollection('episodes');
+const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="全部課程 — 魏晉南北朝史" description="魏晉南北朝史15集完整課程列表">
+  <div class="page">
+    <header class="page-header">
+      <h1>全部課程</h1>
+      <p>共15集，完整覆蓋魏晉南北朝400年歷史</p>
+    </header>
+
+    <div class="episodes-list">
+      {episodes.map(ep => (
+        <a href={`/episodes/${ep.id}`} class="ep-row">
+          <span class="ep-num">{String(ep.data.order).padStart(2, '0')}</span>
+          <div class="ep-info">
+            <h2>{ep.data.title}</h2>
+            <p>{ep.data.subtitle}</p>
+          </div>
+          <div class="ep-tags">
+            {ep.data.tags.map(tag => <span class="tag">{tag}</span>)}
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+  .page-header { margin-bottom: 40px; }
+  .page-header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 32px; font-weight: 700; margin-bottom: 10px;
+  }
+  .page-header p { color: var(--text-muted); font-size: 15px; }
+
+  .episodes-list { display: flex; flex-direction: column; gap: 12px; }
+  .ep-row {
+    display: flex; align-items: center; gap: 20px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px;
+    text-decoration: none; color: inherit;
+    transition: all 0.2s;
+  }
+  .ep-row:hover {
+    border-color: var(--accent-dim); background: var(--bg-card-hover);
+    transform: translateX(4px);
+  }
+  .ep-num {
+    font-size: 20px; font-weight: 700;
+    color: var(--accent); font-family: 'Noto Serif TC', serif;
+    flex-shrink: 0; width: 40px;
+  }
+  .ep-info { flex: 1; min-width: 0; }
+  .ep-info h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px; font-weight: 700; margin-bottom: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ep-info p { font-size: 13px; color: var(--text-muted); }
+  .ep-tags { display: flex; gap: 6px; flex-shrink: 0; }
+  .tag {
+    font-size: 11px; color: var(--text-dim);
+    background: var(--bg); padding: 3px 8px; border-radius: 4px;
+  }
+  .arrow { color: var(--text-dim); font-size: 18px; flex-shrink: 0; }
+  .ep-row:hover .arrow { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .ep-tags { display: none; }
+    .ep-row { padding: 16px 18px; gap: 14px; }
+    .ep-num { width: 32px; font-size: 16px; }
+  }
+</style>
