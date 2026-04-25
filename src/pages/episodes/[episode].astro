@@ -8,7 +8,7 @@ export async function getStaticPaths() {
     .sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0))
     .map(ep => ({
       // Strip .md extension for URL
-      params: { slug: ep.id.replace(/\.md$/, '') },
+      params: { episode: ep.id.replace(/\.md$/, '') },
       props: { ep },
     }));
 }
