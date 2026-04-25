@@ -17,18 +17,18 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
     {currentEp && (
       <>
         <nav class="episode-nav">
-          <a href="/episodes" class="back">
+          <a href="/wei-jin-history-learning/episodes" class="back">
             <span>←</span> 返回課程列表
           </a>
           <div class="nav-arrows">
             {prevEp ? (
-              <a href={`/episodes/ep${String(prevEp.data.order).padStart(2,'0')}`} class="nav-btn">
+              <a href={`/wei-jin-history-learning/episodes/ep${String(prevEp.data.order).padStart(2,'0')}`} class="nav-btn">
                 ← 第{prevEp.data.order}集
               </a>
             ) : <span />}
             <span class="ep-counter">第{currentEp.data.order}集 / 共15集</span>
             {nextEp ? (
-              <a href={`/episodes/ep${String(nextEp.data.order).padStart(2,'0')}`} class="nav-btn">
+              <a href={`/wei-jin-history-learning/episodes/ep${String(nextEp.data.order).padStart(2,'0')}`} class="nav-btn">
                 第{nextEp.data.order}集 →
               </a>
             ) : <span />}

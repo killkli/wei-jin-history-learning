@@ -15,7 +15,7 @@ const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
 
     <div class="episodes-list">
       {episodes.map(ep => (
-        <a href={`/episodes/${ep.id}`} class="ep-row">
+        <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-row">
           <span class="ep-num">{String(ep.data.order).padStart(2, '0')}</span>
           <div class="ep-info">
             <h2>{ep.data.title}</h2>

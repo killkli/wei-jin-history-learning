@@ -18,7 +18,7 @@ const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
       <span><span class="dot"></span> 400年歷史</span>
       <span><span class="dot"></span> 國中適用</span>
     </div>
-    <a href="/episodes" class="cta">開始學習 →</a>
+    <a href="/wei-jin-history-learning/episodes" class="cta">開始學習 →</a>
   </section>
 
   <!-- Instructor -->
@@ -64,11 +64,11 @@ const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
   <section class="section">
     <div class="section-header">
       <h2 class="section-title">全部課程</h2>
-      <a href="/episodes" class="see-all">查看全部 →</a>
+      <a href="/wei-jin-history-learning/episodes" class="see-all">查看全部 →</a>
     </div>
     <div class="episodes-grid">
       {episodes.map(ep => (
-        <a href={`/episodes/${ep.id}`} class="ep-card">
+        <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-card">
           <div class="ep-card-header">
             <span class="ep-num">第{ep.data.order}集</span>
             <div class="ep-tags">
