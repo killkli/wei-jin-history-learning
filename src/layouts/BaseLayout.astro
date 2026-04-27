@@ -14,111 +14,299 @@ const { title, description = "臺灣大學甘懷真教授《魏晉南北朝史�
   <title>{title}</title>
   <meta name="description" content={description}>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <nav>
+  <header class="site-header">
+    <nav class="site-nav container-wide" aria-label="主導覽">
       <a href="/wei-jin-history-learning/" class="logo">魏晉<span>南北朝</span>史</a>
-      <div class="nav-links">
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="切換導覽選單"
+        aria-expanded="false"
+        aria-controls="site-nav-links"
+      >
+        ☰
+      </button>
+
+      <div class="nav-links" id="site-nav-links">
         <a href="/wei-jin-history-learning/">首頁</a>
         <a href="/wei-jin-history-learning/episodes">全部課程</a>
         <a href="/wei-jin-history-learning/episodes/ep12">桃花源</a>
         <a href="/wei-jin-history-learning/episodes/ep14">東亞世界</a>
       </div>
-      <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
     </nav>
   </header>
+
   <main>
     <slot />
   </main>
-  <footer>
-    <p>📜 臺灣大學歷史系 · 甘懷真教授 | 魏晉南北朝史國中教材</p>
-    <p style="font-size:13px;color:#71717a;margin-top:8px;">本網站僅供學習用途</p>
+
+  <footer class="site-footer">
+    <div class="container-wide footer-inner">
+      <p>📜 臺灣大學歷史系 · 甘懷真教授｜魏晉南北朝史國中教材</p>
+      <p class="footer-note">本網站整理自課程逐字稿與知識文本，供教學與學習用途。</p>
+    </div>
   </footer>
+
+  <script>
+    const toggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('#site-nav-links');
+
+    if (toggle && navLinks) {
+      toggle.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      navLinks.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+  </script>
 </body>
 </html>
 
 <style is:global>
   :root {
-    --bg: #0a0a0e;
-    --bg-card: #131318;
-    --bg-card-hover: #1c1c22;
-    --accent: #e5a84b;
-    --accent-dim: #c4893a;
-    --text: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --text-dim: #71717a;
-    --border: #27272a;
-    --green: #4ade80;
-    --blue: #60a5fa;
-    --purple: #a78bfa;
+    --bg: #0b1020;
+    --bg-elevated: rgba(12, 18, 34, 0.94);
+    --surface: #121a2d;
+    --surface-soft: #18233d;
+    --surface-muted: #0f1628;
+    --surface-accent: linear-gradient(180deg, rgba(229, 168, 75, 0.12), rgba(229, 168, 75, 0.03));
+    --accent: #e8b257;
+    --accent-strong: #f2c06a;
+    --accent-soft: rgba(232, 178, 87, 0.16);
+    --text: #f7f7f2;
+    --text-muted: #d7d7cf;
+    --text-soft: #b5b8c5;
+    --text-dim: #8f96a8;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(232, 178, 87, 0.26);
+    --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.18);
+    --shadow-card: 0 20px 48px rgba(0, 0, 0, 0.22);
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 28px;
+    --container-wide: 1180px;
+    --container-content: 960px;
+    --container-reading: 760px;
+    --space-section: 88px;
+    --space-section-mobile: 56px;
+    --text-xs: 0.8125rem;
+    --text-sm: 0.9375rem;
+    --text-base: 1rem;
+    --text-md: 1.0625rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
     font-family: 'Noto Sans TC', sans-serif;
-    background: var(--bg);
+    font-size: var(--text-base);
+    line-height: 1.75;
+    background:
+      radial-gradient(circle at top, rgba(232, 178, 87, 0.1), transparent 30%),
+      linear-gradient(180deg, #08101d 0%, #0b1020 100%);
     color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,14,0.92);
-    backdrop-filter: blur(16px);
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  ::selection {
+    background: rgba(232, 178, 87, 0.25);
+    color: var(--text);
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0a1020; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+  }
+
+  .container-wide,
+  .container-content,
+  .container-reading {
+    width: min(100% - 48px, var(--container-wide));
+    margin-inline: auto;
+  }
+
+  .container-content { width: min(100% - 48px, var(--container-content)); }
+  .container-reading { width: min(100% - 48px, var(--container-reading)); }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8, 13, 24, 0.82);
+    backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
   }
-  nav {
-    max-width: 1100px; margin: 0 auto;
-    padding: 0 24px;
-    height: 60px;
-    display: flex; align-items: center; gap: 32px;
+
+  .site-nav {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
   }
+
   .logo {
     font-family: 'Noto Serif TC', serif;
-    font-size: 18px; font-weight: 700;
-    color: var(--accent); text-decoration: none;
+    font-size: clamp(1.25rem, 1.6vw, 1.4rem);
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--accent);
+    letter-spacing: 0.02em;
     flex-shrink: 0;
   }
+
   .logo span { color: var(--text); }
-  .nav-links { display: flex; gap: 4px; margin-left: auto; }
-  .nav-links a {
-    color: var(--text-muted); text-decoration: none;
-    font-size: 14px; padding: 8px 14px; border-radius: 8px;
-    transition: all 0.2s;
+
+  .nav-links {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  .nav-links a:hover { color: var(--text); background: var(--bg-card); }
+
+  .nav-links a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: var(--text-sm);
+    color: var(--text-soft);
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-links a:hover,
+  .nav-links a:focus-visible {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+    outline: none;
+  }
+
   .menu-toggle {
-    display: none; background: none; border: none;
-    color: var(--text); font-size: 22px; cursor: pointer; margin-left: auto;
+    display: none;
+    margin-left: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 1.35rem;
+    cursor: pointer;
   }
 
   main { flex: 1; }
 
-  footer {
-    text-align: center;
-    padding: 40px 24px;
+  .site-footer {
     border-top: 1px solid var(--border);
-    color: var(--text-muted); font-size: 14px;
+    padding: 40px 0 48px;
+    margin-top: 24px;
+  }
+
+  .footer-inner {
+    text-align: center;
+    color: var(--text-soft);
+    font-size: var(--text-sm);
+  }
+
+  .footer-note {
+    margin-top: 10px;
+    color: var(--text-dim);
+    font-size: var(--text-xs);
+  }
+
+  @media (max-width: 900px) {
+    .site-nav {
+      gap: 16px;
+    }
+
+    .nav-links a {
+      padding-inline: 14px;
+    }
   }
 
   @media (max-width: 768px) {
-    .menu-toggle { display: block; }
+    .container-wide,
+    .container-content,
+    .container-reading {
+      width: min(100% - 40px, var(--container-wide));
+    }
+
+    .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+
     .nav-links {
       display: none;
-      position: absolute; top: 60px; left: 0; right: 0;
-      flex-direction: column;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      padding: 12px;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 20px;
+      right: 20px;
       margin-left: 0;
+      padding: 14px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(12, 18, 34, 0.98);
+      box-shadow: var(--shadow-soft);
     }
+
     .nav-links.open { display: flex; }
+
+    .nav-links a {
+      min-height: 46px;
+      justify-content: flex-start;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .site-footer {
+      padding: 32px 0 40px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    body {
+      font-size: var(--text-sm);
+    }
+
+    .site-nav {
+      min-height: 68px;
+    }
+
+    .logo {
+      font-size: 1.18rem;
+    }
   }
 </style>

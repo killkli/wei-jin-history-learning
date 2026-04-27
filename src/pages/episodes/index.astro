@@ -6,75 +6,199 @@ const allEpisodes = await getCollection('episodes');
 const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="全部課程 — 魏晉南北朝史" description="魏晉南北朝史15集完整課程列表">
-  <div class="page">
-    <header class="page-header">
-      <h1>全部課程</h1>
-      <p>共15集，完整覆蓋魏晉南北朝400年歷史</p>
-    </header>
+<BaseLayout title="全部課程 — 魏晉南北朝史" description="魏晉南北朝史 15 集完整課程列表">
+  <section class="episodes-page">
+    <div class="container-content">
+      <header class="page-header">
+        <span class="eyebrow">課程地圖</span>
+        <h1>15 堂課完整索引</h1>
+        <p>依照課程順序整理，適合從第一集一路閱讀，也可以依照主題挑選切入點。</p>
 
-    <div class="episodes-list">
-      {episodes.map(ep => (
-        <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-row">
-          <span class="ep-num">{String(ep.data.order).padStart(2, '0')}</span>
-          <div class="ep-info">
-            <h2>{ep.data.title}</h2>
-            <p>{ep.data.subtitle}</p>
-          </div>
-          <div class="ep-tags">
-            {ep.data.tags.map(tag => <span class="tag">{tag}</span>)}
-          </div>
-          <span class="arrow">→</span>
-        </a>
-      ))}
+        <div class="page-meta">
+          <span>共 15 集</span>
+          <span>適合國中程度閱讀</span>
+          <span>可作為教師備課參考</span>
+        </div>
+      </header>
+
+      <div class="episodes-list">
+        {episodes.map(ep => (
+          <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-row">
+            <div class="ep-order">{String(ep.data.order).padStart(2, '0')}</div>
+
+            <div class="ep-info">
+              <div class="ep-info-top">
+                <h2>{ep.data.title}</h2>
+                <span class="arrow">閱讀 →</span>
+              </div>
+              <p>{ep.data.subtitle}</p>
+              <div class="ep-tags">
+                {ep.data.tags.map(tag => <span class="tag">{tag}</span>)}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .page { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
-  .page-header { margin-bottom: 40px; }
-  .page-header h1 {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 32px; font-weight: 700; margin-bottom: 10px;
+  .episodes-page {
+    padding: 68px 0 88px;
   }
-  .page-header p { color: var(--text-muted); font-size: 15px; }
 
-  .episodes-list { display: flex; flex-direction: column; gap: 12px; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(232, 178, 87, 0.12);
+    border: 1px solid rgba(232, 178, 87, 0.18);
+    color: var(--accent-strong);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+  }
+
+  .page-header {
+    margin-bottom: 34px;
+  }
+
+  .page-header h1 {
+    margin: 16px 0 12px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(2.2rem, 4vw, 2.8rem);
+    line-height: 1.2;
+  }
+
+  .page-header p {
+    max-width: 44rem;
+    color: var(--text-muted);
+    font-size: clamp(1.02rem, 2vw, 1.1rem);
+    line-height: 1.85;
+  }
+
+  .page-meta {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .page-meta span,
+  .tag {
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.045);
+    color: var(--text-soft);
+    font-size: var(--text-xs);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .episodes-list {
+    display: grid;
+    gap: 16px;
+  }
+
   .ep-row {
-    display: flex; align-items: center; gap: 20px;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px 24px;
-    text-decoration: none; color: inherit;
-    transition: all 0.2s;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 20px;
+    align-items: start;
+    padding: 24px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
+
   .ep-row:hover {
-    border-color: var(--accent-dim); background: var(--bg-card-hover);
-    transform: translateX(4px);
+    transform: translateY(-3px);
+    border-color: var(--border-strong);
+    background: rgba(232, 178, 87, 0.08);
   }
-  .ep-num {
-    font-size: 20px; font-weight: 700;
-    color: var(--accent); font-family: 'Noto Serif TC', serif;
-    flex-shrink: 0; width: 40px;
+
+  .ep-order {
+    width: 84px;
+    min-height: 84px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(232, 178, 87, 0.18), rgba(232, 178, 87, 0.05));
+    color: var(--accent-strong);
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
   }
-  .ep-info { flex: 1; min-width: 0; }
+
+  .ep-info {
+    min-width: 0;
+  }
+
+  .ep-info-top {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
   .ep-info h2 {
     font-family: 'Noto Serif TC', serif;
-    font-size: 16px; font-weight: 700; margin-bottom: 4px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: clamp(1.2rem, 2.6vw, 1.45rem);
+    line-height: 1.45;
   }
-  .ep-info p { font-size: 13px; color: var(--text-muted); }
-  .ep-tags { display: flex; gap: 6px; flex-shrink: 0; }
-  .tag {
-    font-size: 11px; color: var(--text-dim);
-    background: var(--bg); padding: 3px 8px; border-radius: 4px;
-  }
-  .arrow { color: var(--text-dim); font-size: 18px; flex-shrink: 0; }
-  .ep-row:hover .arrow { color: var(--accent); }
 
-  @media (max-width: 640px) {
-    .ep-tags { display: none; }
-    .ep-row { padding: 16px 18px; gap: 14px; }
-    .ep-num { width: 32px; font-size: 16px; }
+  .ep-info p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+
+  .ep-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .arrow {
+    color: var(--accent-strong);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .episodes-page {
+      padding: 44px 0 56px;
+    }
+
+    .ep-row {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .ep-order {
+      width: 72px;
+      min-height: 72px;
+      font-size: 1.35rem;
+      border-radius: 18px;
+    }
+
+    .ep-info-top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

@@ -13,40 +13,54 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
 ---
 
 <BaseLayout title={currentEp ? `第${currentEp.data.order}集：${currentEp.data.title} — 魏晉南北朝史` : '魏晉南北朝史'}>
-  <div class="episode-layout">
+  <div class="episode-shell container-content">
     {currentEp && (
       <>
-        <nav class="episode-nav">
-          <a href="/wei-jin-history-learning/episodes" class="back">
-            <span>←</span> 返回課程列表
+        <nav class="episode-top-nav" aria-label="課程導覽">
+          <a href="/wei-jin-history-learning/episodes" class="back-link">
+            <span>←</span>
+            <span>返回課程總覽</span>
           </a>
-          <div class="nav-arrows">
+
+          <div class="sibling-nav">
             {prevEp ? (
-              <a href={`/wei-jin-history-learning/episodes/ep${String(prevEp.data.order).padStart(2,'0')}`} class="nav-btn">
-                ← 第{prevEp.data.order}集
+              <a href={`/wei-jin-history-learning/episodes/ep${String(prevEp.data.order).padStart(2,'0')}`} class="sibling-btn">
+                <small>上一課</small>
+                <strong>第{prevEp.data.order}集</strong>
               </a>
-            ) : <span />}
-            <span class="ep-counter">第{currentEp.data.order}集 / 共15集</span>
+            ) : (
+              <span class="sibling-btn placeholder" aria-hidden="true"></span>
+            )}
+
             {nextEp ? (
-              <a href={`/wei-jin-history-learning/episodes/ep${String(nextEp.data.order).padStart(2,'0')}`} class="nav-btn">
-                第{nextEp.data.order}集 →
+              <a href={`/wei-jin-history-learning/episodes/ep${String(nextEp.data.order).padStart(2,'0')}`} class="sibling-btn align-right">
+                <small>下一課</small>
+                <strong>第{nextEp.data.order}集</strong>
               </a>
-            ) : <span />}
+            ) : (
+              <span class="sibling-btn placeholder" aria-hidden="true"></span>
+            )}
           </div>
         </nav>
 
-        <article class="episode-content">
+        <article class="episode-card">
           <header class="episode-header">
-            <div class="ep-badge">第{currentEp.data.order}集</div>
+            <div class="eyebrow-row">
+              <div class="ep-badge">第{currentEp.data.order}集</div>
+              <div class="ep-counter">共 15 集中的第 {currentEp.data.order} 集</div>
+            </div>
+
             <h1>{currentEp.data.title}</h1>
             <p class="subtitle">{currentEp.data.subtitle}</p>
-            <div class="tags">
+
+            <div class="tags" aria-label="主題標籤">
               {currentEp.data.tags.map(tag => (
                 <span class="tag">{tag}</span>
               ))}
             </div>
           </header>
-          <div class="prose">
+
+          <div class="prose container-reading">
             <slot />
           </div>
         </article>
@@ -56,135 +70,354 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
 </BaseLayout>
 
 <style>
-  .episode-layout { max-width: 780px; margin: 0 auto; padding: 0 24px 80px; }
+  .episode-shell {
+    padding-top: 28px;
+    padding-bottom: 88px;
+  }
 
-  .episode-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 28px 0 32px;
-    gap: 16px; flex-wrap: wrap;
+  .episode-top-nav {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 24px;
   }
-  .back {
-    color: var(--text-muted); text-decoration: none;
-    font-size: 14px; display: flex; align-items: center; gap: 6px;
-    transition: color 0.2s;
+
+  .back-link {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-soft);
+    font-size: var(--text-sm);
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
-  .back:hover { color: var(--text); }
-  .nav-arrows { display: flex; align-items: center; gap: 12px; }
-  .nav-btn {
-    color: var(--text-muted); text-decoration: none;
-    font-size: 14px; padding: 6px 12px;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 8px; transition: all 0.2s;
+
+  .back-link:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+    background: rgba(232, 178, 87, 0.08);
   }
-  .nav-btn:hover { color: var(--text); border-color: var(--accent-dim); }
-  .ep-counter { color: var(--text-dim); font-size: 13px; }
+
+  .sibling-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .sibling-btn {
+    min-height: 78px;
+    text-decoration: none;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .sibling-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+    background: rgba(232, 178, 87, 0.08);
+  }
+
+  .sibling-btn small {
+    font-size: var(--text-xs);
+    color: var(--text-dim);
+  }
+
+  .sibling-btn strong {
+    font-size: var(--text-md);
+    font-weight: 700;
+  }
+
+  .align-right {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .placeholder {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .episode-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(18, 26, 45, 0.96), rgba(11, 16, 32, 0.98));
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
 
   .episode-header {
-    padding-bottom: 32px; margin-bottom: 40px;
+    padding: 44px 40px 36px;
     border-bottom: 1px solid var(--border);
+    background: radial-gradient(circle at top left, rgba(232, 178, 87, 0.14), transparent 28%);
   }
+
+  .eyebrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
   .ep-badge {
-    display: inline-block;
-    background: rgba(229,168,75,0.12);
-    color: var(--accent); font-size: 12px; font-weight: 700;
-    padding: 4px 12px; border-radius: 6px; margin-bottom: 16px;
-    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.05em;
   }
+
+  .ep-counter {
+    color: var(--text-dim);
+    font-size: var(--text-sm);
+  }
+
   h1 {
     font-family: 'Noto Serif TC', serif;
-    font-size: clamp(22px, 5vw, 32px); font-weight: 700;
-    line-height: 1.3; margin-bottom: 12px;
-  }
-  .subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 16px; }
-  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-  .tag {
-    background: var(--bg-card); border: 1px solid var(--border);
-    color: var(--text-dim); font-size: 12px;
-    padding: 3px 10px; border-radius: 6px;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
   }
 
-  /* Prose styles for markdown content */
+  .subtitle {
+    font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+    line-height: 1.85;
+    color: var(--text-muted);
+    max-width: 46rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-soft);
+    font-size: var(--text-xs);
+  }
+
+  .prose {
+    padding: 40px 0 48px;
+  }
+
+  .prose :global(h1) {
+    display: none;
+  }
+
   .prose :global(h2) {
     font-family: 'Noto Serif TC', serif;
-    font-size: 20px; font-weight: 700;
-    color: var(--accent); margin: 40px 0 20px;
-    padding-bottom: 10px; border-bottom: 1px solid var(--border);
-  }
-  .prose :global(h3) {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 17px; font-weight: 700;
-    margin: 28px 0 14px;
-  }
-  .prose :global(p) {
-    font-size: 16px; line-height: 1.9; color: var(--text-muted);
-    margin-bottom: 16px;
-  }
-  .prose :global(strong) { color: var(--text); font-weight: 600; }
-  .prose :global(em) { color: var(--text); font-style: italic; }
-  .prose :global(hr) {
-    border: none; border-top: 1px solid var(--border);
-    margin: 36px 0;
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+    line-height: 1.35;
+    color: var(--accent-strong);
+    margin: 56px 0 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
   }
 
-  /* Special box styles */
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .prose :global(h3) {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(1.2rem, 2.6vw, 1.4rem);
+    line-height: 1.4;
+    margin: 36px 0 16px;
+  }
+
+  .prose :global(p),
+  .prose :global(li) {
+    font-size: clamp(1.03rem, 2vw, 1.1rem);
+    line-height: 1.95;
+    color: var(--text-muted);
+  }
+
+  .prose :global(p) {
+    margin-bottom: 20px;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 24px 1.4rem;
+    display: grid;
+    gap: 10px;
+  }
+
+  .prose :global(strong) {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .prose :global(em) {
+    color: #f4dfb2;
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .prose :global(.story-box),
+  .prose :global(.think-box),
+  .prose :global(.modern-box),
+  .prose :global(.summary-box),
+  .prose :global(.question-item) {
+    border-radius: 20px;
+    padding: 24px;
+    margin: 28px 0;
+  }
+
   .prose :global(.story-box) {
-    background: linear-gradient(135deg, rgba(229,168,75,0.08), rgba(229,168,75,0.03));
-    border-left: 3px solid var(--accent);
-    border-radius: 0 12px 12px 0;
-    padding: 18px 22px; margin: 20px 0;
+    background: linear-gradient(135deg, rgba(232, 178, 87, 0.12), rgba(232, 178, 87, 0.04));
+    border-left: 4px solid var(--accent);
   }
+
   .prose :global(.think-box) {
-    background: rgba(74,222,128,0.06);
-    border: 1px solid rgba(74,222,128,0.15);
-    border-radius: 12px; padding: 18px 22px; margin: 20px 0;
+    background: rgba(95, 178, 126, 0.08);
+    border: 1px solid rgba(95, 178, 126, 0.18);
   }
+
   .prose :global(.modern-box) {
-    background: rgba(96,165,250,0.06);
-    border: 1px solid rgba(96,165,250,0.15);
-    border-radius: 12px; padding: 18px 22px; margin: 20px 0;
+    background: rgba(97, 149, 255, 0.08);
+    border: 1px solid rgba(97, 149, 255, 0.18);
   }
+
   .prose :global(.summary-box) {
-    background: var(--bg-card);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
-    border-radius: 16px; padding: 24px; margin: 32px 0;
   }
+
   .prose :global(.think-box h4),
   .prose :global(.modern-box h4),
-  .prose :global(.summary-box h3) {
-    font-size: 14px; margin-bottom: 10px;
+  .prose :global(.summary-box h3),
+  .prose :global(.question-item h4) {
+    font-size: var(--text-base);
+    line-height: 1.5;
+    margin-bottom: 10px;
   }
-  .prose :global(.think-box h4) { color: var(--green); }
-  .prose :global(.modern-box h4) { color: var(--blue); }
-  .prose :global(.summary-box h3) { color: var(--accent); }
+
+  .prose :global(.think-box h4) { color: #92d8a8; }
+  .prose :global(.modern-box h4) { color: #9ec0ff; }
+  .prose :global(.summary-box h3) { color: var(--accent-strong); }
+  .prose :global(.question-item h4) { color: #c4b0ff; }
+
   .prose :global(.think-box p),
-  .prose :global(.modern-box p) { font-size: 15px; margin-bottom: 0; }
+  .prose :global(.modern-box p),
+  .prose :global(.question-item p) {
+    margin-bottom: 0;
+    font-size: clamp(1rem, 1.9vw, 1.05rem);
+  }
+
   .prose :global(.summary-box ul) {
-    list-style: none; display: grid; gap: 8px;
+    list-style: none;
+    margin-left: 0;
+    gap: 12px;
   }
+
   .prose :global(.summary-box li) {
-    font-size: 14px; color: var(--text-muted);
-    padding: 10px 14px; background: var(--bg);
-    border-radius: 8px;
+    display: block;
+    padding: 14px 16px;
+    background: var(--surface-muted);
+    border-radius: 14px;
+    color: var(--text-muted);
+    font-size: 1rem;
   }
+
   .prose :global(.summary-box li::before) {
-    content: '✦'; color: var(--accent); margin-right: 8px;
+    content: '✦';
+    color: var(--accent);
+    margin-right: 10px;
   }
+
   .prose :global(.core-questions) {
-    margin-top: 48px; padding-top: 32px;
+    margin-top: 56px;
+    padding-top: 36px;
     border-top: 1px solid var(--border);
   }
+
   .prose :global(.core-questions h2) {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 18px; color: var(--purple);
-    margin-bottom: 20px; border: none; padding: 0;
+    color: #c4b0ff;
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 22px;
   }
+
   .prose :global(.question-item) {
-    background: rgba(167,139,250,0.06);
-    border: 1px solid rgba(167,139,250,0.15);
-    border-radius: 12px; padding: 18px 22px; margin-bottom: 14px;
+    background: rgba(167, 139, 250, 0.09);
+    border: 1px solid rgba(167, 139, 250, 0.16);
   }
-  .prose :global(.question-item h4) {
-    color: var(--purple); font-size: 14px; margin-bottom: 8px;
+
+  @media (max-width: 900px) {
+    .episode-shell {
+      padding-bottom: 72px;
+    }
+
+    .episode-header {
+      padding: 36px 28px 30px;
+    }
   }
-  .prose :global(.question-item p) { font-size: 14px; margin-bottom: 0; }
+
+  @media (max-width: 768px) {
+    .episode-shell {
+      padding-top: 20px;
+      padding-bottom: 56px;
+    }
+
+    .episode-top-nav {
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .sibling-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .sibling-btn,
+    .placeholder {
+      min-height: 72px;
+    }
+
+    .align-right {
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    .episode-header {
+      padding: 30px 20px 24px;
+    }
+
+    .prose {
+      padding: 32px 0 40px;
+    }
+  }
 </style>
