@@ -4,7 +4,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allEpisodes = await getCollection('episodes');
 const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
-const featuredEpisodes = episodes.slice(0, 6);
+const extractCoreQuestions = (body) => {
+  const match = body.match(/##\s*(?:【)?核心問題(?:】)?[^\n]*\n([\s\S]*)$/);
+  if (!match) return [];
+
+  return match[1]
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => /^\d+\./.test(line))
+    .map(line => line.replace(/^\d+\.\s*/, '').trim());
+};
+
+const featuredEpisodes = episodes.slice(0, 6).map((ep) => ({
+  ...ep,
+  coreQuestions: extractCoreQuestions(ep.body),
+}));
 ---
 
 <BaseLayout title="魏晉南北朝史 — 甘懷真教授 | 國中歷史學習網" description="臺灣大學甘懷真教授《魏晉南北朝史》15集完整課程，適合國中生自學的歷史知識網站">
@@ -111,17 +125,26 @@ const featuredEpisodes = episodes.slice(0, 6);
 
       <div class="episodes-grid">
         {featuredEpisodes.map(ep => (
-          <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-card">
+          <article class="ep-card">
             <div class="ep-card-header">
               <span class="ep-num">第 {ep.data.order} 集</span>
               <div class="ep-tags">
                 {ep.data.tags.slice(0, 2).map(tag => <span class="ep-tag">{tag}</span>)}
               </div>
             </div>
-            <h3>{ep.data.title}</h3>
+            <h3><a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-title-link">{ep.data.title}</a></h3>
             <p>{ep.data.subtitle}</p>
-            <span class="ep-link">閱讀本課 →</span>
-          </a>
+            {ep.coreQuestions[0] && (
+              <div class="core-question-preview">
+                <span class="core-question-label">本課核心問題</span>
+                <p>{ep.coreQuestions[0]}</p>
+              </div>
+            )}
+            <div class="ep-actions">
+              <a href={`/wei-jin-history-learning/episodes/${ep.id}`} class="ep-link">閱讀本課 →</a>
+              <a href={`/wei-jin-history-learning/episodes/${ep.id}#核心問題`} class="ep-link secondary">直達核心問題 →</a>
+            </div>
+          </article>
         ))}
       </div>
     </div>
@@ -266,6 +289,8 @@ const featuredEpisodes = episodes.slice(0, 6);
   .instructor-card,
   .theme-card,
   .ep-card {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--border);
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.035);
