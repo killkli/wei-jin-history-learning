@@ -6,8 +6,9 @@ const allEpisodes = await getCollection('episodes');
 const episodes = allEpisodes.sort((a, b) => a.data.order - b.data.order);
 
 const currentPath = Astro.url.pathname;
-const currentEp = episodes.find(ep => currentPath.includes(`/ep${String(ep.data.order).padStart(2,'0')}`));
-const currentIdx = currentEp ? episodes.indexOf(currentEp) : -1;
+const { ep: episodeProp } = Astro.props;
+const currentEp = episodeProp ?? episodes.find(ep => currentPath.includes(`/ep${String(ep.data.order).padStart(2,'0')}`));
+const currentIdx = currentEp ? episodes.findIndex(ep => ep.id === currentEp.id) : -1;
 const prevEp = currentIdx > 0 ? episodes[currentIdx - 1] : null;
 const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : null;
 ---
@@ -52,6 +53,13 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
 
             <h1>{currentEp.data.title}</h1>
             <p class="subtitle">{currentEp.data.subtitle}</p>
+
+            <div class="source-links">
+              <a href={currentEp.data.youtubeUrl} class="source-link" target="_blank" rel="noreferrer noopener">
+                <span>▶</span>
+                <span>觀看甘懷真教授原講座 YouTube</span>
+              </a>
+            </div>
 
             <div class="tags" aria-label="主題標籤">
               {currentEp.data.tags.map(tag => (
@@ -204,6 +212,39 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
     line-height: 1.85;
     color: var(--text-muted);
     max-width: 46rem;
+  }
+
+  .source-links {
+    margin-top: 18px;
+  }
+
+  .source-link {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .source-link:hover {
+    transform: translateY(-1px);
+    color: var(--text);
+    border-color: var(--border-strong);
+    background: rgba(232, 178, 87, 0.1);
+  }
+
+  .source-link span:first-child {
+    color: var(--accent-strong);
+    font-size: 0.95rem;
   }
 
   .tags {

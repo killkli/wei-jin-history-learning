@@ -8,6 +8,7 @@ const episodes = defineCollection({
     subtitle: z.string(),
     tags: z.array(z.string()),
     order: z.number(),
+    youtubeUrl: z.string().url(),
   }),
 });
 
