@@ -287,6 +287,59 @@ const nextEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : nul
     margin: 48px 0;
   }
 
+  .prose :global(table) {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    margin: 30px 0 34px;
+    border: 1px solid rgba(232, 178, 87, 0.18);
+    border-radius: 18px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .prose :global(thead th) {
+    background: rgba(232, 178, 87, 0.12);
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    min-width: 8rem;
+    padding: 15px 18px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+    vertical-align: top;
+    font-size: clamp(1rem, 1.8vw, 1.05rem);
+    line-height: 1.85;
+    letter-spacing: 0.02em;
+    word-break: normal;
+  }
+
+  .prose :global(td) {
+    color: var(--text-muted);
+  }
+
+  .prose :global(tr > :last-child) {
+    border-right: none;
+  }
+
+  .prose :global(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+
+  .prose :global(thead tr:first-child th:first-child) {
+    border-top-left-radius: 18px;
+  }
+
+  .prose :global(thead tr:first-child th:last-child) {
+    border-top-right-radius: 18px;
+  }
+
   .prose :global(.story-box),
   .prose :global(.think-box),
   .prose :global(.modern-box),
